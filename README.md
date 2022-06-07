@@ -1,5 +1,7 @@
 # Python API client for fetching Plaato data
 
+Credits for this functionality go to [https://github.com/JohNan/pyplaato](https://github.com/JohNan/pyplaato)
+
 Fetches data for the Plaato Keg and Plaato Airlock using the official API handed by [blynk.cc](blynk.cc)
 
 To be able to query the API an `auth_token` is required and which can be obtained by following [these](https://plaato.zendesk.com/hc/en-us/articles/360003234717-Auth-token) instructions

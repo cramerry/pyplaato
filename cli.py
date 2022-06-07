@@ -14,8 +14,6 @@ from pyplaato.plaato import (
     PlaatoDeviceType
 )
 
-urllib3.disable_warnings()
-
 async def go(args):
     headers = {}
     if args.api_key:
@@ -31,14 +29,13 @@ async def go(args):
         #print(f"Device type: {result.device_type}")
         #print(f"Name: {result.name}")
         #print(f"Firmware: {result.firmware_version}")
-        print(f"Date: {datetime.fromtimestamp(result.date).strftime('%c')}")
         #print("Sensors:")
-        print("Percent CO2 remaining: "f"{result.percent_beer_left}, " "lbs CO2 remaining: "f"{result.beer_left}")
-        # add in result.
+        print(f"Date: {datetime.fromtimestamp(result.date).strftime('%c')}")
+        print("Percent CO2 remaining: "f"{result.percent_beer_left}, " "lbs CO2 remaining: "f"{result.beer_left}, " "LeakStatus: "f"{result.leak_detection}")
+        data = {'index':'test', 'sourcetype':'json_no_timestamp', 'source':'co2', 'host':'rp4', 'event':{'perc_co2_left':result.percent_beer_left, 'lbs_co2_left':result.beer_left, 'LeakDetected':result.leak_detection}}
+        r = requests.post(splunk.splunk_ep, headers=splunk.headers2, json=data, verify=False)
         #for key, attr in result.sensors.items():
         #    print(f"{result.get_sensor_name(key)}: {attr} {result.get_unit_of_measurement(key)}")
-        data = {'index':'test', 'sourcetype':'json_no_timestamp', 'source':'co2', 'host':'rp4', 'event':{'perc_co2_left':result.percent_beer_left, 'lbs_co2_left':result.beer_left}}
-        r = requests.post(splunk.splunk_ep, headers=splunk.headers2, json=data, verify=False)
         #r = requests.post(splunk_ep, headers=headers, json={'source':'plaato' 'sourcetype': 'Auto', 'host':'rp4', 'index':'test','fields':{'fieldname':fieldvalue}}, verify=False)        #RC
         #print("Binary Sensors:")
         #for key, attr in result.binary_sensors.items():
