@@ -4,15 +4,23 @@ import sys
 from datetime import datetime
 import aiohttp
 
-import requests
-import urllib3
-urllib3.disable_warnings()
-import splunk
 
 from pyplaato.plaato import (
     Plaato,
     PlaatoDeviceType
 )
+
+# splunk-related dependencies
+import requests
+import urllib3
+urllib3.disable_warnings()
+import splunk
+
+# mqtt-related dependencies
+import paho.mqtt.client as mqtt
+broker_url = "192.168.7.248"
+broker_port = 1884
+
 
 async def go(args):
     headers = {}
@@ -32,7 +40,11 @@ async def go(args):
         # send data to Splunk HEC
         data = {'index':'test', 'sourcetype':'json_no_timestamp', 'source':'co2', 'host':'rp4', 'event':{'perc_co2_left':result.percent_beer_left, 'lbs_co2_left':result.beer_left, 'LeakDetected':result.leak_detection}}
         r = requests.post(splunk.splunk_ep, headers=splunk.headers2, json=data, verify=False)
+
         # send data to Edge Hub MQTT topics /beer/perc-co2-left
+        client = mqtt.Client()
+        client.connect(broker_url, broker_port)
+        client.publish(topic="CO2R", payload=result.percent_beer_left, qos=1, retain=False)
 
 def main():
     parser = argparse.ArgumentParser()
