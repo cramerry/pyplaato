@@ -2,8 +2,8 @@ import argparse
 import asyncio
 import sys
 from datetime import datetime
-
 import aiohttp
+
 import requests
 import urllib3
 urllib3.disable_warnings()
@@ -26,24 +26,13 @@ async def go(args):
         if args.device == 'airlock':
             device_type = PlaatoDeviceType.Airlock
         result = await plaato.get_data(session, device_type)
-        #print(f"Device type: {result.device_type}")
-        #print(f"Name: {result.name}")
-        #print(f"Firmware: {result.firmware_version}")
-        #print("Sensors:")
         print(f"Date: {datetime.fromtimestamp(result.date).strftime('%c')}")
         print("Percent CO2 remaining: "f"{result.percent_beer_left}, " "lbs CO2 remaining: "f"{result.beer_left}, " "LeakStatus: "f"{result.leak_detection}")
+
+        # send data to Splunk HEC
         data = {'index':'test', 'sourcetype':'json_no_timestamp', 'source':'co2', 'host':'rp4', 'event':{'perc_co2_left':result.percent_beer_left, 'lbs_co2_left':result.beer_left, 'LeakDetected':result.leak_detection}}
         r = requests.post(splunk.splunk_ep, headers=splunk.headers2, json=data, verify=False)
-        #for key, attr in result.sensors.items():
-        #    print(f"{result.get_sensor_name(key)}: {attr} {result.get_unit_of_measurement(key)}")
-        #r = requests.post(splunk_ep, headers=headers, json={'source':'plaato' 'sourcetype': 'Auto', 'host':'rp4', 'index':'test','fields':{'fieldname':fieldvalue}}, verify=False)        #RC
-        #print("Binary Sensors:")
-        #for key, attr in result.binary_sensors.items():
-        #    print(f"\t{result.get_sensor_name(key)}: {attr}")
-        #print("Attributes:")
-        #for key, attr in result.attributes.items():
-        #    print(f"\t{key}: {attr}")
-
+        # send data to Edge Hub MQTT topics /beer/perc-co2-left
 
 def main():
     parser = argparse.ArgumentParser()

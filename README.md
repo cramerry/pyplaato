@@ -1,16 +1,22 @@
 # Python API client for fetching Plaato data
 
-Credits for this functionality go to [https://github.com/JohNan/pyplaato](https://github.com/JohNan/pyplaato)
+  * Credits for this API client go to [JohNan/pyplaato](https://github.com/JohNan/pyplaato).
 
-Fetches data for the Plaato Keg and Plaato Airlock using the official API handed by [blynk.cc](blynk.cc)
+  * Client fetches data for the Plaato Keg (scale) using the official API, and publishes to Splunk HEC endpoint.
 
-To be able to query the API an `auth_token` is required and which can be obtained by following [these](https://plaato.zendesk.com/hc/en-us/articles/360003234717-Auth-token) instructions
+  * To be able to query the API an `auth_token` is required and which can be obtained by following [these](https://plaato.zendesk.com/hc/en-us/articles/360003234717-Auth-token) instructions
 
-For more information about the available pins that can be retrieved please see the official [docs](https://plaato.zendesk.com/hc/en-us/articles/360003234877-Pins) from Plaato
+  * Create a tools/splunk.py file with Splunk HEC endpoint & headers, example:
+    
+    splunk_ep = https://[SplunkIP]:8088/services/collector/event
+    
+    headers2 = {'Authorization': 'Splunk [SplunkToken]', 'Content-Type': 'application/json'}
+
+  * For more information about the available pins that can be retrieved please see the official [docs](https://plaato.zendesk.com/hc/en-us/articles/360003234877-Pins) from Plaato
 
 ## Usage
 ```
-usage: cli.py [-h] -t AUTH_TOKEN -d {keg,airlock,both} [-u URL] [-k API_KEY]
+usage: cli.py -t AUTH_TOKEN -d keg
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -18,48 +24,6 @@ optional arguments:
 required arguments:
   -t AUTH_TOKEN         Auth token received from Plaato
   -d {keg,airlock}
-
-optional arguments:
-  -u URL                Mock url
-  -k API_KEY            Header key for mock url
-```
-
-## Available pins
-
-### Keg
-```python
-    BEER_NAME = "v64"
-    PERCENT_BEER_LEFT = "v48"
-    POURING = "v49"
-    BEER_LEFT = "v51"
-    BEER_LEFT_UNIT = "v74"
-    TEMPERATURE = "v56"
-    UNIT_TYPE = "v71"
-    MEASURE_UNIT = "v75"
-    MASS_UNIT = "v73"
-    VOLUME_UNIT = "v82"
-    LAST_POUR = "v59"
-    DATE = "v67"
-    OG = "v65"
-    FG = "v66"
-    ABV = "v68"
-    FIRMWARE_VERSION = "v93"
-    LEAK_DETECTION = "v83"
-    MODE = "v88"
-```
-
-### AirLock
-```python
-    BPM = "v102"
-    TEMPERATURE = "v103"
-    BATCH_VOLUME = "v104"
-    OG = "v105"
-    SG = "v106"
-    ABV = "v107"
-    TEMPERATURE_UNIT = "v108"
-    VOLUME_UNIT = "v109"
-    BUBBLES = "v110"
-    CO2_VOLUME = "v119"
 ```
 
 ### Disclaimer
