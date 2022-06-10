@@ -21,7 +21,6 @@ import paho.mqtt.client as mqtt
 broker_url = "192.168.7.248"
 broker_port = 1884
 
-
 async def go(args):
     headers = {}
     if args.api_key:

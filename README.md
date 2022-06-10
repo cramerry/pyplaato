@@ -2,15 +2,16 @@
 
   * Credits for this API client go to [JohNan/pyplaato](https://github.com/JohNan/pyplaato).
 
-  * Client fetches data for the Plaato Keg (scale) using the official API, and publishes to Splunk HEC endpoint.
+  * Client fetches data for the Plaato Keg (scale) using the official API, and publishes to Splunk HEC endpoint or MQTT Broker (i.e., Splunk Edge Hub).
 
   * To be able to query the API an `auth_token` is required and which can be obtained by following [these](https://plaato.zendesk.com/hc/en-us/articles/360003234717-Auth-token) instructions
 
-  * Create a tools/splunk.py file with Splunk HEC endpoint & headers, example:
+  * If using HEC, create a tools/splunk.py file with Splunk HEC endpoint & headers, example:
     
     splunk_ep = https://[SplunkIP]:8088/services/collector/event
     
     headers2 = {'Authorization': 'Splunk [SplunkToken]', 'Content-Type': 'application/json'}
+  * Set to run on preferred interval via crontab, or implement python loop in script.
 
   * For more information about the available pins that can be retrieved please see the official [docs](https://plaato.zendesk.com/hc/en-us/articles/360003234877-Pins) from Plaato
 
