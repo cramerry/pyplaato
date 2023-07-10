@@ -1,7 +1,7 @@
 import argparse
 import asyncio
 import sys
-#from datetime import datetime
+from datetime import datetime
 import aiohttp
 import json
 
@@ -15,7 +15,7 @@ from pyplaato.plaato import (
 import paho.mqtt.client as mqtt
 broker_url = "10.0.7.25"
 broker_port = 1884
-topic = "beer/plaato1"
+topic = "beer/plaato3"
 
 
 async def go(args):
@@ -30,9 +30,9 @@ async def go(args):
         if args.device == 'airlock':
             device_type = PlaatoDeviceType.Airlock
         result = await plaato.get_data(session, device_type)
-        data = {"device":"plaato1", "beerLeft": result.beer_left, "percentLeft": result.percent_beer_left, "leakStatus": result.leak_detection, "lastPour": result.last_pour}
+        data = {"device":"plaato3", "beerLeft": result.beer_left, "percentLeft": result.percent_beer_left, "leakStatus": result.leak_detection, "lastPour": result.last_pour}
         payload = json.dumps(data)
-#       print(f"Date: {datetime.fromtimestamp(result.date).strftime('%c')}")
+        print(f"Date: {datetime.fromtimestamp(result.date).strftime('%c')}")
 #       print("Percent remaining: "f"{result.percent_beer_left}, " "lbs CO2 remaining: "f"{result.beer_left}, " "LeakStatus: "f"{result.leak_detection}")
         print(payload)
         # send data to Edge Hub MQTT topics /beer/CO2R
